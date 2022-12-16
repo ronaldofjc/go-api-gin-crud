@@ -5,6 +5,7 @@ import (
 	"api-crud/src/controller/model/request"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func CreateUser(c *gin.Context) {
@@ -17,5 +18,5 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userRequest)
+	c.JSON(http.StatusOK, userRequest)
 }
