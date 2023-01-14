@@ -4,6 +4,8 @@ import (
 	"api-crud/src/configuration/logger"
 	"api-crud/src/configuration/validation"
 	"api-crud/src/controller/model/request"
+	"api-crud/src/model"
+	service2 "api-crud/src/model/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -20,6 +22,14 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
+
+	service := service2.NewUserDomainService()
+	if err := service.CreateUser(domain); err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
 	logger.Info("User created successfully", zap.String("journey", "createUser"))
-	c.JSON(http.StatusOK, userRequest)
+	c.String(http.StatusOK, "")
 }
