@@ -2,7 +2,9 @@ package main
 
 import (
 	"api-crud/src/configuration/logger"
+	"api-crud/src/controller"
 	"api-crud/src/controller/routes"
+	"api-crud/src/model/service"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -15,11 +17,13 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	//envTest := os.Getenv("HELLO")
+	//Init dependencies
+	userService := service.NewUserDomainService()
+	userController := controller.NewUserControllerInterface(userService)
 
 	router := gin.Default()
 
-	routes.InitRoutes(&router.RouterGroup)
+	routes.InitRoutes(&router.RouterGroup, userController)
 
 	if err := router.Run(":8090"); err != nil {
 		log.Fatal(err)
