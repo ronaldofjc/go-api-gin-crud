@@ -1,7 +1,6 @@
 package main
 
 import (
-	"api-crud/src/configuration/database/mongodb"
 	"api-crud/src/configuration/logger"
 	"api-crud/src/controller"
 	"api-crud/src/controller/routes"
@@ -17,8 +16,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	mongodb.InitConnection()
 
 	//Init dependencies
 	userService := service.NewUserDomainService()
