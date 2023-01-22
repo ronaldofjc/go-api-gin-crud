@@ -5,21 +5,30 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"os"
 	"time"
 )
 
-func InitConnection() {
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+var (
+	URL     = "MONGODB_URL"
+	USER_DB = "MONGODB_USER_DB"
+)
+
+func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
+	mongoUri := os.Getenv(URL)
+	mongoDatabase := os.Getenv(USER_DB)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err := client.Ping(ctx, nil); err != nil {
-		panic(err)
+		return nil, err
 	}
 
+	database := client.Database(mongoDatabase)
 	logger.Info("MongoDB connected with success")
+	return database, nil
 }
