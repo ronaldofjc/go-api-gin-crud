@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-crud/src/configuration/database/mongodb"
 	"api-crud/src/configuration/logger"
 	"api-crud/src/controller"
 	"api-crud/src/controller/routes"
@@ -11,11 +12,13 @@ import (
 )
 
 func main() {
-	logger.Info("About to start user application")
+	logger.Info("Start user application")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	mongodb.InitConnection()
 
 	//Init dependencies
 	userService := service.NewUserDomainService()
